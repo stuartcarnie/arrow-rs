@@ -387,9 +387,14 @@ where
                 .ok_or_else(|| Status::internal("Expected a command, but found none."))
         }
 
-        if msg.is::<TicketStatementQuery>() {
-            return self.do_get_statement(unpack(msg)?, request).await;
-        }
+        let command = Command::try_from(msg.clone()).map_err(arrow_error_to_status)?;
+        match command {
+            Command::TicketStatemetQuery(command) => {
+                return self.do_get_statement(command, request).await;
+            }
+            _ => {}
+        };
+
         if msg.is::<CommandPreparedStatementQuery>() {
             return self.do_get_prepared_statement(unpack(msg)?, request).await;
         }
