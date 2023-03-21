@@ -389,7 +389,7 @@ where
 
         let command = Command::try_from(msg.clone()).map_err(arrow_error_to_status)?;
         match command {
-            Command::TicketStatemetQuery(command) => {
+            Command::TicketStatementQuery(command) => {
                 return self.do_get_statement(command, request).await;
             }
             _ => {}
